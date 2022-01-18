@@ -9,7 +9,7 @@
 
 Scrapping Api to retrieve the lastest released anime episodes from [ADKami](https://www.adkami.com/).
 
-Made with [Nest](https://github.com/nestjs/nest) framework / [Redis](https://redis.io/) Database (Caching)
+Made with [Nest](https://github.com/nestjs/nest) framework / NestJS Caching Service
 
 Deployed on [Heroku](https://www.heroku.com/home).
 
