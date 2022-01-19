@@ -2,15 +2,16 @@ import { Injectable, Logger } from '@nestjs/common';
 import { CacheService } from './cache.service';
 import { AdkamiNewEpisodeShape, CachedDOMShape } from './Interfaces/interfaces';
 // WebScrap
-import * as cloudscrapper from 'cloudscraper';
+import { HttpService } from '@nestjs/axios';
 import * as jsdom from 'jsdom';
+import { firstValueFrom } from 'rxjs';
 
 const { JSDOM } = jsdom;
 
 @Injectable()
 export class AppService {
   private logger = new Logger('AppService', { timestamp: true });
-  constructor(private cacheService: CacheService) {}
+  constructor(private cacheService: CacheService, private axios: HttpService) {}
 
   async handleNewRequest(): Promise<AdkamiNewEpisodeShape[]> {
     const CachedDOMObject = await this.cacheService.getCache('CachedDOMObject');
@@ -28,8 +29,28 @@ export class AppService {
 
   async queryNewData(): Promise<AdkamiNewEpisodeShape[] | false> {
     try {
-      const HtmlDocRes = await cloudscrapper.get('https://www.adkami.com/');
-      const DOM = new JSDOM(HtmlDocRes);
+      const HtmlDocRes = await firstValueFrom(
+        this.axios.get('https://www.adkami.com/', {
+          headers: {
+            accept:
+              'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+            'accept-language': 'fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7',
+            'cache-control': 'max-age=0',
+            'sec-fetch-dest': 'document',
+            'sec-fetch-mode': 'navigate',
+            'sec-fetch-site': 'none',
+            'sec-fetch-user': '?1',
+            'sec-gpc': '1',
+            'upgrade-insecure-requests': '1',
+            'referrer-policy': 'strict-origin-when-cross-origin',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods':
+              'GET, POST, PUT, PATCH, DELETE, OPTIONS',
+            referrer: 'https://www.adkami.com/',
+          },
+        }),
+      );
+      const DOM = new JSDOM(HtmlDocRes.data);
       const ReleasedAnimeDiv =
         DOM.window.document.querySelectorAll('.video-item-list') || null;
       if (!ReleasedAnimeDiv) return false;
