@@ -1,4 +1,4 @@
-import { Controller, Get, Logger } from '@nestjs/common';
+import { Controller, Get, Logger, NotFoundException } from '@nestjs/common';
 import { AppService } from './app.service';
 import { AdkamiNewEpisodeShape } from './Interfaces/interfaces';
 
@@ -8,7 +8,9 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get('/last')
-  getLastest(): Promise<AdkamiNewEpisodeShape[]> {
-    return this.appService.handleNewRequest();
+  async getLastest(): Promise<AdkamiNewEpisodeShape[]> {
+    const LastReleasedEP = await this.appService.handleNewRequest();
+    if (!LastReleasedEP) throw new NotFoundException();
+    return LastReleasedEP;
   }
 }

@@ -10,16 +10,21 @@ const { JSDOM } = jsdom;
 
 @Injectable()
 export class AppService {
-  private logger = new Logger('AppService');
+  private logger = new Logger('AppService', { timestamp: true });
   constructor(private cacheService: CacheService, private axios: HttpService) {}
 
   async handleNewRequest(): Promise<AdkamiNewEpisodeShape[]> {
     const CachedDOMObject = await this.cacheService.getCache('CachedDOMObject');
-    if (CachedDOMObject && CachedDOMObject?.lastRefresh > Date.now())
+    if (CachedDOMObject && CachedDOMObject?.lastRefresh > Date.now()) {
+      this.logger.warn('Data are up to date, return cached version');
       return CachedDOMObject?.DOMObject || null;
-    const NewDom = this.queryNewData();
+    }
+    this.logger.warn('Old Cached Data, recreate new Data');
 
-    return null;
+    const NewDom = this.queryNewData();
+    if (!NewDom) return null;
+
+    return NewDom as unknown as AdkamiNewEpisodeShape[];
   }
 
   async queryNewData(): Promise<AdkamiNewEpisodeShape[] | false> {
@@ -34,6 +39,7 @@ export class AppService {
       const DOMObject: AdkamiNewEpisodeShape[] = Array.from(
         ReleasedAnimeDiv,
       ).map((animeEp): AdkamiNewEpisodeShape => {
+        // Parent
         const Children = Array.from(animeEp?.children);
         const ImgParent = Children.find(
           (child) => child?.classList[0] === 'img',
@@ -45,13 +51,13 @@ export class AppService {
           (child) => child?.classList[0] === 'info',
         );
 
+        // Data
         const title = Array.from(TopParent.children).find(
           (TopChild) => TopChild?.tagName === 'A',
         )?.children[0]?.textContent;
         const Img = Array.from(ImgParent.children)
           .find((ImgChild) => ImgChild?.tagName === 'IMG')
           ?.getAttribute('data-original');
-
         const EpInfo = Array.from(TopParent.children).find(
           (TopChild) => TopChild?.classList[0] === 'episode',
         );
@@ -69,10 +75,16 @@ export class AppService {
           TimeReleased,
         };
       });
-      console.log(DOMObject);
-      // await this.cacheService.setNewCache('CachedDOMObject', []);
+
+      const CachableDOMObejct: CachedDOMShape = {
+        lastRefresh: Date.now() + 3600000,
+        DOMObject,
+      };
+      await this.cacheService.setNewCache('CachedDOMObject', CachableDOMObejct);
+      this.logger.log('New Data created and cached');
+      return DOMObject;
     } catch (err) {
-      console.error(err);
+      this.logger.error(`Failed To Cache New ADKami data`, err.stack);
       return false;
     }
   }
