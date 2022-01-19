@@ -2,7 +2,12 @@
 
 export interface AdkamiNewEpisodeShape {
   title: string; // Black Clover
-  episodeId: number; // Episode 28 vostfr
+  episodeId: string; // Episode 28 vostfr
   TimeReleased: string; // 28min ago
+  Img: string;
   Team: string; // Wakanim
+}
+export interface CachedDOMShape {
+  lastRefresh: number;
+  DOMObject: AdkamiNewEpisodeShape[];
 }
