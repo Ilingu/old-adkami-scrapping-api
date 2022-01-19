@@ -21,37 +21,10 @@ export class AppService {
     }
     this.logger.warn('Old Cached Data, recreate new Data');
 
-    this.queryTest();
-    return null;
-    // const NewDom = this.queryNewData();
-    // if (!NewDom) return null;
+    const NewDom = this.queryNewData();
+    if (!NewDom) return null;
 
-    // return NewDom as unknown as AdkamiNewEpisodeShape[];
-  }
-
-  async queryTest() {
-    try {
-      const data = await firstValueFrom(
-        this.axios.get('https://ack.vercel.app/', {
-          headers: {
-            accept:
-              'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
-            'accept-language': 'fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7',
-            'cache-control': 'max-age=0',
-            'sec-fetch-dest': 'document',
-            'sec-fetch-mode': 'navigate',
-            'sec-fetch-site': 'none',
-            'sec-fetch-user': '?1',
-            'sec-gpc': '1',
-            'upgrade-insecure-requests': '1',
-            'referrer-policy': 'strict-origin-when-cross-origin',
-          },
-        }),
-      );
-      console.log(data.data);
-    } catch (err) {
-      this.logger.error(`Failed QueryTest`, err.stack);
-    }
+    return NewDom as unknown as AdkamiNewEpisodeShape[];
   }
 
   async queryNewData(): Promise<AdkamiNewEpisodeShape[] | false> {
@@ -70,6 +43,10 @@ export class AppService {
             'sec-gpc': '1',
             'upgrade-insecure-requests': '1',
             'referrer-policy': 'strict-origin-when-cross-origin',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods':
+              'GET, POST, PUT, PATCH, DELETE, OPTIONS',
+            referrer: 'https://www.adkami.com/',
           },
         }),
       );
