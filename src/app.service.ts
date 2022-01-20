@@ -32,7 +32,7 @@ export class AppService {
       const ADKamiURL = 'https%3A%2F%2Fwww.adkami.com%2F';
       const HtmlDocRes = await firstValueFrom(
         this.axios.get(
-          `https://api.webscrapingapi.com/v1?api_key=${process.env.WEBSCAPPING_APIKEY}&url=${ADKamiURL}&device=desktop&proxy_type=residential`,
+          `https://api.webscrapingapi.com/v1?api_key=${process.env.WEBSCAPPING_APIKEY}&url=${ADKamiURL}&device=desktop&proxy_type=datacenter`,
         ),
       );
       const DOM = new JSDOM(HtmlDocRes.data);

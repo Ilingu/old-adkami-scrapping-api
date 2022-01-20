@@ -17,7 +17,7 @@ Deployed on [Heroku](https://www.heroku.com/home).
 
 This api have been built for [ACK](https://ack.vercel.app/) website, but can be used by anyone
 
-App in contruction, `currently no endpoint`
+[API endpoint](https://adkami-scapping-api.herokuapp.com/last) `https://adkami-scapping-api.herokuapp.com/last`
 
 ## License
 
