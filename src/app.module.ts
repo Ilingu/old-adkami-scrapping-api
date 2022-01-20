@@ -7,8 +7,7 @@ import { CacheService } from './cache.service';
 
 @Module({
   imports: [
-    process.env.STAGE === 'dev' &&
-      ConfigModule.forRoot({ envFilePath: [`.env.dev`] }),
+    ConfigModule.forRoot({ envFilePath: [`.env.${process.env.STAGE}`] }),
     CacheModule.register(),
     HttpModule,
   ],
