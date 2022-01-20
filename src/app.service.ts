@@ -29,26 +29,11 @@ export class AppService {
 
   async queryNewData(): Promise<AdkamiNewEpisodeShape[] | false> {
     try {
+      const ADKamiURL = 'https%3A%2F%2Fwww.adkami.com%2F';
       const HtmlDocRes = await firstValueFrom(
-        this.axios.get('https://www.adkami.com/', {
-          headers: {
-            accept:
-              'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
-            'accept-language': 'fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7',
-            'accept-encoding': 'gzip, deflate, br',
-            'cache-control': 'max-age=0',
-            'sec-fetch-dest': 'document',
-            'sec-fetch-mode': 'navigate',
-            'sec-fetch-site': 'none',
-            'sec-fetch-user': '?1',
-            'sec-gpc': '1',
-            'upgrade-insecure-requests': '1',
-            cookie:
-              'theme=tm-dark; cf_clearance=qpW.0_HVF1qslmWXQPjOSNonZK1sLtG_rW7uHfOwqYY-1640459245-0-150; PHPSESSID=bb3e8ea9ae76c3479a100a21f2e220cf',
-            'user-agent':
-              'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36',
-          },
-        }),
+        this.axios.get(
+          `https://api.webscrapingapi.com/v1?api_key=${process.env.WEBSCAPPING_APIKEY}&url=${ADKamiURL}&device=desktop&proxy_type=datacenter`,
+        ),
       );
       const DOM = new JSDOM(HtmlDocRes.data);
       const ReleasedAnimeDiv =
@@ -107,12 +92,3 @@ export class AppService {
     }
   }
 }
-
-// fetch('https://www.adkami.com/', {
-// headers: {
-
-//   },
-//   referrerPolicy: 'strict-origin-when-cross-origin',
-//   body: null,
-//   method: 'GET',
-// })
