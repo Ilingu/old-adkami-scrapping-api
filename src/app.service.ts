@@ -45,7 +45,7 @@ export class AppService {
             'upgrade-insecure-requests': '1',
             cookie:
               'theme=tm-dark; cf_clearance=qpW.0_HVF1qslmWXQPjOSNonZK1sLtG_rW7uHfOwqYY-1640459245-0-150; PHPSESSID=bb3e8ea9ae76c3479a100a21f2e220cf',
-            'User-Agent':
+            'user-agent':
               'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36',
           },
         }),
