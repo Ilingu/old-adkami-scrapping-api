@@ -49,7 +49,10 @@ export class AppService {
 
       const $ = cheerio.load(content);
       const ReleasedAnimeDiv = $('.video-item-list') || null;
-      if (!ReleasedAnimeDiv || ReleasedAnimeDiv.length <= 0) return false;
+      if (!ReleasedAnimeDiv || ReleasedAnimeDiv.length <= 0) {
+        this.logger.error('ERROR when query this page datas');
+        return false;
+      }
 
       const DOMObject: AdkamiNewEpisodeShape[] = Array.from(
         ReleasedAnimeDiv.map((_, elem): AdkamiNewEpisodeShape => {
@@ -74,6 +77,11 @@ export class AppService {
           };
         }),
       );
+
+      if (DOMObject.length <= 0) {
+        this.logger.error('No Datas To Extract From This Page');
+        return false;
+      }
 
       const CachableDOMObejct: CachedDOMShape = {
         lastRefresh: Date.now() + 3600000,
