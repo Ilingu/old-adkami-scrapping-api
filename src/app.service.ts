@@ -26,11 +26,25 @@ export class AppService {
 
   async queryNewData(): Promise<AdkamiNewEpisodeShape[] | false> {
     try {
-      const ADKamiURL = 'https://www.adkami.com';
-      const browser = await puppeteer.launch();
+      const ADKamiURL = `https://api.webscrapingapi.com/v1?api_key=${process.env.WEBSCAPPING_APIKEY}&url=https%3A%2F%2Fwww.adkami.com%2F&device=desktop&proxy_type=datacenter`;
+      const browser = await puppeteer.launch({
+        headless: true,
+        defaultViewport: null,
+        args: [
+          '--incognito',
+          '--no-sandbox',
+          '--single-process',
+          '--no-zygote',
+        ],
+      });
+
       const page = await browser.newPage();
       await page.goto(ADKamiURL);
       const content = await page.content();
+      if (!content) {
+        this.logger.error('No Content On This Page');
+        return false;
+      }
 
       const $ = cheerio.load(content);
       const ReleasedAnimeDiv = $('.video-item-list') || null;
