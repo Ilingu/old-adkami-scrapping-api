@@ -41,14 +41,15 @@ export class AppService {
       const page = await browser.newPage();
       await page.goto(ADKamiURL);
       const content = await page.content();
-      if (!content) {
+
+      if (!content || content.trim().length <= 0) {
         this.logger.error('No Content On This Page');
         return false;
       }
 
       const $ = cheerio.load(content);
       const ReleasedAnimeDiv = $('.video-item-list') || null;
-      if (!ReleasedAnimeDiv) return false;
+      if (!ReleasedAnimeDiv || ReleasedAnimeDiv.length <= 0) return false;
 
       const DOMObject: AdkamiNewEpisodeShape[] = Array.from(
         ReleasedAnimeDiv.map((_, elem): AdkamiNewEpisodeShape => {
