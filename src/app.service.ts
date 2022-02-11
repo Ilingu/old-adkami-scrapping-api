@@ -27,16 +27,7 @@ export class AppService {
   async queryNewData(): Promise<AdkamiNewEpisodeShape[] | false> {
     try {
       const ADKamiURL = 'https://www.adkami.com';
-      const browser = await puppeteer.launch({
-        headless: true,
-        defaultViewport: null,
-        args: [
-          '--incognito',
-          '--no-sandbox',
-          '--single-process',
-          '--no-zygote',
-        ],
-      });
+      const browser = await puppeteer.launch();
       const page = await browser.newPage();
       await page.goto(ADKamiURL);
       const content = await page.content();
