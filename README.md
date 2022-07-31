@@ -1,3 +1,12 @@
+# ❌ [DEPRECATED] Version
+
+## This project has been abandonned because of the following reasons:
+
+1. This is an old version of this project, written in JS (Nest.js) and puppeteer, which was quite slow. So I rewrite it entirly in Go: [New Repo](https://github.com/Ilingu/ack_v2/tree/main/APIs/adkami-scrapping-api).
+2. This repo has been moved in the mono repo of it [associated project](https://github.com/Ilingu/ack_v2)
+
+---
+
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
 </p>
